@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIALUM - SDN 17 Dauh Puri Denpasar</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Font Ikon Resmi -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 Pop-Up Keren -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .hidden-section { display: none; }
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { position: absolute; left: 0; top: 0; width: 100%; max-width: 210mm; p: 0; margin: 0; }
+            .no-print { display: none !important; }
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen flex flex-col justify-between">
+
+    <!-- NAVBAR ATAS -->
+    <nav class="bg-blue-800 text-white shadow-md no-print">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white p-1 rounded-full w-10 h-10 flex items-center justify-center font-bold text-blue-800 text-xl shadow shadow-inner">17</div>
+                <div>
+                    <span class="font-extrabold text-lg block tracking-wider">SIALUM</span>
+                    <span class="text-xs text-blue-200 block -mt-1">SDN 17 Dauh Puri Kota Denpasar</span>
+                </div>
+            </div>
+            <button id="navAdminBtn" onclick="toggleView('admin')" class="bg-blue-700 hover:bg-blue-600 transition px-4 py-1.5 rounded text-sm font-semibold border border-blue-500 shadow">
+                <i class="fa-solid fa-user-gear mr-1"></i> Area Guru Admin
+            </button>
+            <button id="navFormBtn" onclick="toggleView('form')" class="hidden-section bg-emerald-600 hover:bg-emerald-500 transition px-4 py-1.5 rounded text-sm font-semibold shadow">
+                <i class="fa-solid fa-wpforms mr-1"></i> Formulir Alumni
+            </button>
+        </div>
+    </nav>
+
+    <!-- KONTEN UTAMA -->
+    <main class="max-w-4xl w-full mx-auto p-4 flex-grow flex items-center justify-center my-6">
+        
+        <!-- ==================== VIEW 1: FORM INPUT ALUMNI ==================== -->
+        <div id="formSection" class="bg-white rounded-2xl shadow-xl p-6 md:p-8 w-full border border-slate-200">
+            <!-- Header Penjelasan Aplikasi & Nama Sekolah -->
+            <div class="text-center border-b pb-6 mb-6">
+                <h1 class="text-3xl font-extrabold text-blue-900 tracking-tight">SIALUM</h1>
+                <p class="text-md font-bold text-slate-700 uppercase tracking-wide mt-1">Sistem Informasi & Penelusuran Alumni</p>
+                <p class="text-lg font-semibold text-amber-600">SD Negeri 17 Dauh Puri Denpasar - Bali</p>
+                
+                <div class="mt-4 max-w-xl mx-auto bg-blue-50 text-blue-900 text-xs md:text-sm p-4 rounded-xl border border-blue-200 shadow-inner leading-relaxed text-justify">
+                    <i class="fa-solid fa-circle-info text-blue-600 text-base float-left mr-2 mt-0.5"></i>
+                    <strong>Yth. Para Alumni Lintas Generasi,</strong> pendataan ini diinisiasi sekolah untuk memetakan jejak pendidikan lulusan baru serta membangun jaringan kemitraan strategis dengan alumni dewasa. Data Anda akan kami gunakan sebagai ruang kolaborasi jangka panjang, seperti menghadirkan narasumber berkeahlian khusus pada <em>Kelas Inspirasi</em>, kegiatan sosial sekolah, hingga evaluasi mutu pembelajaran. Terima kasih atas kontribusi nyata Anda!
+                </div>
+            </div>
+
+            <!-- Formulir Input -->
+            <form id="alumniForm" class="space-y-6">
+                <!-- Bagian 1: Identitas Umum -->
+                <div class="space-y-4">
+                    <h3 class="text-md font-bold text-slate-800 border-l-4 border-blue-600 pl-2 uppercase tracking-wider"><i class="fa-solid fa-id-card text-blue-600 mr-1"></i> 1. Identitas Diri Alumni</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nama Lengkap *</label>
+                            <input type="text" name="Nama Lengkap" required class="w-full rounded-lg border-slate-300 shadow-sm p-2.5 bg-slate-50 border focus:border-blue-500 focus:bg-white focus:outline-none text-sm transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tahun Lulus dari SD 17 *</label>
+                            <select id="tahunLulus" name="Tahun Lulus SD" required class="w-full rounded-lg border-slate-300 shadow-sm p-2.5 bg-slate-50 border focus:border-blue-500 focus:bg-white focus:outline-none text-sm transition">
+                                <option value="">-- Pilih Tahun Lulus --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">No. WhatsApp (Aktif) *</label>
+                            <input type="tel" name="No WhatsApp" placeholder="Contoh: 081234567xxx" required class="w-full rounded-lg border-slate-300 shadow-sm p-2.5 bg-slate-50 border focus:border-blue-500 focus:bg-white focus:outline-none text-sm transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Alamat Email *</label>
+                            <input type="email" name="Email" required class="w-full rounded-lg border-slate-300 shadow-sm p-2.5 bg-slate-50 border focus:border-blue-500 focus:bg-white focus:outline-none text-sm transition">
+                        </div>
+                    </div>
+
+                    <!-- Input Tautan Sosial Media Ber-Ikon -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                        <label class="block text-xs font-bold text-slate-800 uppercase tracking-wide mb-1"><i class="fa-solid fa-share-nodes mr-1 text-slate-600"></i> Tautan / Link Akun Media Sosial</label>
+                        
+                        <div class="flex rounded-lg shadow-sm">
+                            <span class="px-3 inline-flex items-center bg-blue-600 border border-r-0 border-blue-600 rounded-l-lg text-white text-sm w-12 justify-center"><i class="fa-brands fa-facebook-f text-base"></i></span>
+                            <input type="text" id="fbInput" name="Link Facebook" placeholder="Paste Link Profil Facebook Anda" class="w-full rounded-r-lg border-slate-300 p-2 border focus:border-blue-500 focus:outline-none text-sm bg-white">
+                        </div>
+
+                        <div class="flex rounded-lg shadow-sm">
+                            <span class="px-3 inline-flex items-center bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 border border-r-0 border-pink-500 rounded-l-lg text-white text-sm w-12 justify-center"><i class="fa-brands fa-instagram text-base"></i></span>
+                            <input type="text" id="igInput" name="Link Instagram" placeholder="Paste Link Profil Instagram Anda" class="w-full rounded-r-lg border-slate-300 p-2 border focus:border-pink-500 focus:outline-none text-sm bg-white">
+                        </div>
+
+                        <div class="flex rounded-lg shadow-sm">
+                            <span class="px-3 inline-flex items-center bg-black border border-r-0 border-black rounded-l-lg text-white text-sm w-12 justify-center"><i class="fa-brands fa-tiktok text-base"></i></span>
+                            <input type="text" id="ttInput" name="Link TikTok" placeholder="Paste Link Profil TikTok Anda" class="w-full rounded-r-lg border-slate-300 p-2 border focus:border-black focus:outline-none text-sm bg-white">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3 PERCABANGAN JALUR OTOMATIS BERDASARKAN SELEKSI AKTIVITAS -->
+                <div class="space-y-4">
+                    <h3 class="text-md font-bold text-slate-800 border-l-4 border-blue-600 pl-2 uppercase tracking-wider"><i class="fa-solid fa-graduation-cap text-blue-600 mr-1"></i> 2. Status Aktivitas Anda Saat Ini</h3>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Kesibukan Utama Saat Ini *</label>
+                        <select id="statusSekarang" name="Status Sekarang" required class="w-full rounded-lg border-slate-300 shadow-sm p-2.5 bg-slate-50 border focus:border-blue-500 focus:bg-white focus:outline-none text-sm transition">
+                            <option value="">-- Pilih Status --</option>
+                            <option value="SMP">Pelajar di Jenjang SMP</option>
+                            <option value="SMA">Pelajar di Jenjang SMA / SMK</option>
+                            <option value="Mapan">Kuliah / Bekerja / Berwirausaha</option>
+                        </select>
+                    </div>
+
+                    <!-- JALUR A: PELAJAR SMP -->
+                    <div id="jalurSMP" class="hidden-section space-y-4 bg-emerald-50 p-4 rounded-xl border border-emerald-200">
+                        <h4 class="text-sm font-bold text-emerald-900 uppercase"><i class="fa-solid fa-school mr-1"></i> Informasi Pendidikan SMP</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Nama SMP Sekarang *</label>
+                                <input type="text" id="smpName" name="Nama SMP Sekarang" class="w-full rounded-lg border-slate-300 p-2.5 border focus:border-emerald-500 focus:outline-none text-sm bg-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Jalur Masuk SMP *</label>
+                                <select id="smpJalur" name="Jalur Masuk SMP" class="w-full rounded-lg border-slate-300 p-2.5 border focus:border-emerald-500 focus:outline-none text-sm bg-white">
+                                    <option value="">-- Pilih Jalur --</option>
+                                    <option value="Zonasi">Zonasi</option>
+                                    <option value="Afirmasi">Afirmasi</option>
+                                    <option value="Prestasi">Jalur Prestasi Academic/Non-Academic</option>
+                                    <option value="Perpindahan Orang Tua">Perpindahan Tugas Orang Tua</option>
+                                    <option value="Swasta/Mandiri">Sekolah Swasta / Jalur Mandiri</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- JALUR B: PELAJAR SMA/SMK -->
+                    <div id="jalurSMA" class="hidden-section space-y-4 bg-amber-50 p-4 rounded-xl border border-amber-200">
+                        <h4 class="text-sm font-bold text-amber-900 uppercase"><i class="fa-solid fa-school-flag mr-1"></i> Informasi Pendidikan SMA / SMK</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Nama SMA / SMK Sekarang *</label>
+                                <input type="text" id="smaName" name="Nama SMA atau SMK Sekarang" class="w-full rounded-lg border-slate-300 p-2.5 border focus:border-amber-500 focus:outline-none text-sm bg-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Jurusan / Peminatan Khusus *</label>
+                                <input type="text" id="smaJurusan" name="Jurusan atau Peminatan SMA" placeholder="Misal: MIPA, IPS, Tataboga, Teknik Mesin" class="w-full rounded-lg border-slate-300 p-2.5 border focus:border-amber-500 focus:outline-none text-sm bg-white">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- JALUR C: KULIAH / BEKERJA / WIRASWASTA -->
+                    <div id="jalurMapan" class="hidden-section space-y-4 bg-purple-50 p-4 rounded-xl border border-purple-200">
+                        <h4 class="text-sm font-bold text-purple-900 uppercase"><i class="fa-solid fa-briefcase mr-1"></i> Informasi Kompetensi Profesi & Sinergi Dedikasi</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Nama Kampus, Instansi, atau Usaha *</label>
+                                <input type="text" id="kerjaInstansi" name="Nama Kampus atau Instansi Tempat Bekerja" placeholder="Misal: Universitas Udayana, Polda Bali, RSUP Ngoerah" class="w-full rounded-lg border-slate-300 p-2.5 border focus:border-purple-500 focus:outline-none text-sm bg-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Keahlian Spesifik / Profesi *</label>
+                                <input type="text" id="kerjaKeahlian" name="Keahlian Spesifik atau Bidang Profesi" placeholder="Misal: Dokter Gigi, Polisi Lalu Lintas, Fotografer" class="w-full rounded-lg border-slate-300 p-2.5 border focus:border-purple-500 focus:outline-none text-sm bg-white">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Bentuk Kontribusi/Sinergi Kegiatan yang Bersedia Anda Lakukan untuk Sekolah: *</label>
+                            <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2 bg-white p-3 rounded-lg border border-purple-100 text-xs text-slate-700">
+                                <label class="flex items-center space-x-2 p-1 hover:bg-slate-50 rounded cursor-pointer"><input type="checkbox" name="sinergi" value="Kelas Inspirasi (Pemateri Profesi)" class="rounded border-slate-300"> <span>Kelas Inspirasi (Pemateri)</span></label>
+                                <label class="flex items-center space-x-2 p-1 hover:bg-slate-50 rounded cursor-pointer"><input type="checkbox" name="sinergi" value="Pemeriksaan Kesehatan Gratis" class="rounded border-slate-300"> <span>Bakti Sosial Medis Gratis</span></label>
+                                <label class="flex items-center space-x-2 p-1 hover:bg-slate-50 rounded cursor-pointer"><input type="checkbox" name="sinergi" value="Sosialisasi Hukum / Lalu Lintas / Anti Bullying" class="rounded border-slate-300"> <span>Sosialisasi Tertib & Aman</span></label>
+                                <label class="flex items-center space-x-2 p-1 hover:bg-slate-50 rounded cursor-pointer"><input type="checkbox" name="sinergi" value="Workshop Seni / Budaya P5" class="rounded border-slate-300"> <span>Pelatih / Workshop Seni Budaya</span></label>
+                                <label class="flex items-center space-x-2 p-1 hover:bg-slate-50 rounded cursor-pointer"><input type="checkbox" name="sinergi" value="Sponsor / Donatur Fasilitas Belajar" class="rounded border-slate-300"> <span>Sponsorship / Donatur</span></label>
+                                <label class="flex items-center space-x-2 p-1 hover:bg-slate-50 rounded cursor-pointer"><input type="checkbox" name="sinergi" value="Lainnya" class="rounded border-slate-300"> <span>Lainnya</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bagian Akhir: Evaluasi Saran & Upload Foto (Umum) -->
+                <div class="space-y-4">
+                    <h3 class="text-md font-bold text-slate-800 border-l-4 border-blue-600 pl-2 uppercase tracking-wider"><i class="fa-solid fa-comments text-blue-600 mr-1"></i> 3. Evaluasi & Unggah Dokumen</h3>
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Saran & Masukan untuk Kemajuan Pendidikan di SDN 17 Dauh Puri *</label>
+                        <textarea name="Saran dan Masukan untuk Kemajuan Sekolah" required rows="3" placeholder="Berikan kritik, harapan, atau saran metode belajar yang menunjang kesiapan lulusan di masa depan..." class="w-full rounded-lg border-slate-300 shadow-sm p-2.5 bg-slate-50 border focus:border-blue-500 focus:bg-white focus:outline-none text-sm transition"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Unggah Swafoto / Foto Profil Terkini (Opsional)</label>
+                        <input type="file" id="fotoInput" accept="image/*" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer border p-1 rounded-lg bg-slate-50">
+                        <p class="text-[11px] text-amber-600 mt-1"><i class="fa-solid fa-bolt"></i> Teknologi 3D Creative Smart Compressor aktif. Foto akan otomatis dikompresi >90% secara cerdas sebelum diunggah demi efisiensi jaringan dan memori.</p>
+                    </div>
+                </div>
+
+                <!-- Tombol Submit Utama -->
+                <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3.5 px-4 rounded-xl transition shadow-lg text-sm tracking-wide uppercase">
+                    <i class="fa-solid fa-paper-plane mr-1"></i> Kirim Data Registrasi Alumni
+                </button>
+            </form>
+        </div>
+
+
+        <!-- ==================== VIEW 2: DASHBOARD GURU ADMIN ==================== -->
+        <div id="adminSection" class="hidden-section bg-white rounded-2xl shadow-xl p-6 md:p-8 w-full border border-slate-200 no-print">
+            
+            <!-- SUB-VIEW A: FORM LOGIN ADMIN -->
+            <div id="loginArea" class="max-w-md mx-auto py-8">
+                <div class="text-center mb-6">
+                    <i class="fa-solid fa-shield-halved text-4xl text-blue-800 mb-2"></i>
+                    <h2 class="text-xl font-bold text-slate-800">Verifikasi Hak Akses Guru</h2>
+                    <p class="text-xs text-slate-500 mt-1">Masukkan sandi khusus yang tersimpan di Google Sheets AdminConfig</p>
+                </div>
+                <form id="loginForm" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Username Admin</label>
+                        <input type="text" id="adminUser" required class="w-full rounded-lg border border-slate-300 p-2.5 focus:border-blue-500 focus:outline-none text-sm bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Password</label>
+                        <input type="password" id="adminPass" required class="w-full rounded-lg border border-slate-300 p-2.5 focus:border-blue-500 focus:outline-none text-sm bg-slate-50">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-800 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-sm transition">
+                        Masuk ke Dashboard Admin
+                    </button>
+                </form>
+            </div>
+
+            <!-- SUB-VIEW B: KONTEN DASHBOARD UTAMA -->
+            <div id="dashboardArea" class="hidden-section space-y-6">
+                <!-- Header Admin & Tombol Cloud Sheets Aman -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-4 gap-3">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800"><i class="fa-solid fa-chart-line text-blue-700 mr-1"></i> Kontrol Data SIALUM</h2>
+                        <p class="text-xs text-slate-500">Gunakan filter canggih di bawah untuk melacak dan mengelola data alumni</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <!-- LINK CERMINAN & UNDUH EXCEL AMAN -->
+                        <a href="https://docs.google.com/spreadsheets/d/PASTE_ID_FILE_SHEET_CERMINAN_ANDA_DI_SINI/edit?usp=sharing" target="_blank" class="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition text-xs font-bold py-2 px-3 rounded-lg border border-indigo-200 flex items-center shadow-sm">
+                            <i class="fa-solid fa-file-shield text-base mr-1.5 text-indigo-600"></i> Lihat Cerminan Sheets
+                        </a>
+                        <a href="https://docs.google.com/spreadsheets/d/PASTE_ID_FILE_SHEET_CERMINAN_ANDA_DI_SINI/export?format=xlsx" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition text-xs font-bold py-2 px-3 rounded-lg border border-emerald-200 flex items-center shadow-sm">
+                            <i class="fa-solid fa-file-excel text-base mr-1.5 text-emerald-600"></i> Download Excel (.xlsx)
+                        </a>
+                    </div>
+                </div>
+
+                <!-- MESIN PENCARIAN & FILTER REAL-TIME -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Ketik Nama Alumni (Minimal 3 Huruf)</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400"><i class="fa-solid fa-magnifying-glass"></i></span>
+                            <input type="text" id="searchName" placeholder="Ketik nama untuk menyaring instan..." class="w-full rounded-lg border border-slate-300 pl-9 p-2.5 focus:border-blue-500 focus:outline-none text-sm bg-white">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Filter Angkatan / Tahun Lulus</label>
+                        <select id="filterTahun" class="w-full rounded-lg border border-slate-300 p-2.5 focus:border-blue-500 focus:outline-none text-sm bg-white">
+                            <option value="">-- Semua Angkatan --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- PANEL SPLIT: LIST HASIL FILTER (KIRI) & VIEW KARTU CV (KANAN) -->
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+                    <!-- DAFTAR NAMA KIRI -->
+                    <div class="md:col-span-2 space-y-2">
+                        <h4 class="text-xs font-bold text-slate-600 uppercase tracking-wider"><i class="fa-solid fa-list-ol mr-1"></i> Daftar Hasil Lacak (<span id="countAlumni">0</span>)</h4>
+                        <div id="alumniListContainer" class="border rounded-xl max-h-[450px] overflow-y-auto bg-white p-2 divide-y text-sm">
+                            <p class="text-center text-slate-400 py-6">Silakan pilih tahun atau ketik nama untuk menampilkan daftar.</p>
+                        </div>
+                    </div>
+
+                    <!-- VIEWER CV UTAMA (KANAN) -->
+                    <div class="md:col-span-3">
+                        <h4 class="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2"><i class="fa-solid fa-address-card mr-1"></i> Preview Dokumen Rekap</h4>
+                        
+                        <!-- CARD PREVIEW KOSONG -->
+                        <div id="emptyCvView" class="border border-dashed border-slate-300 rounded-2xl p-12 text-center bg-slate-200 text-slate-400 flex flex-col items-center justify-center min-h-[450px]">
+                            <i class="fa-solid fa-address-book text-5xl mb-3 text-slate-300 animate-pulse"></i>
+                            <p class="text-sm font-semibold">Belum Ada Profil yang Dipilih</p>
+                            <p class="text-xs max-w-xs mt-1">Pilih salah satu nama alumni di bilah kiri untuk memformat data ke CV Profesional.</p>
+                        </div>
+
+                        <!-- SKELETON LOADING CV -->
+                        <div id="skeletonView" class="hidden-section border rounded-2xl p-6 bg-white space-y-6 min-h-[450px]">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-20 h-20 skeleton rounded-full"></div>
+                                <div class="space-y-2 flex-grow">
+                                    <div class="h-5 skeleton rounded w-1/2"></div>
+                                    <div class="h-4 skeleton rounded w-1/3"></div>
+                                    <div class="h-4 skeleton rounded w-1/4"></div>
+                                </div>
+                            </div>
+                            <div class="space-y-2"><div class="h-4 skeleton rounded"></div><div class="h-4 skeleton rounded w-5/6"></div><div class="h-4 skeleton rounded w-2/3"></div></div>
+                        </div>
+
+                        <!-- KARTU CV PROFESIONAL YANG BISA DICETAK (A4 TARGET) -->
+                        <div id="printArea" class="hidden-section bg-white border border-slate-300 rounded-2xl shadow p-6 min-h-[450px] relative flex flex-col justify-between">
+                            
+                            <!-- TOMBOL CETAK INTERNAL -->
+                            <div class="absolute top-4 right-4 no-print flex space-x-2">
+                                <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1.5 px-3 rounded-lg shadow transition flex items-center">
+                                    <i class="fa-solid fa-print mr-1"></i> Cetak A4
+                                </button>
+                            </div>
+
+                            <div>
+                                <!-- CV HEADER -->
+                                <div class="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 border-b-2 border-slate-800 pb-4 mb-4">
+                                    <img id="cvFoto" src="https://via.placeholder.com/150?text=No+Photo" alt="Foto Alumni" class="w-24 h-24 object-cover rounded-full ring-4 ring-slate-100 shadow border">
+                                    <div class="flex-grow">
+                                        <h3 id="cvNama" class="text-2xl font-black text-slate-900 tracking-tight leading-tight">I GEDE SUMERTA, S.Pd</h3>
+                                        <p id="cvAngkatan" class="text-sm font-bold text-amber-600 mt-0.5">Alumni Lulusan Tahun 2012</p>
+                                        <p class="text-[11px] text-slate-500 font-medium">SD Negeri 17 Dauh Puri Kota Denpasar</p>
+                                        
+                                        <!-- ICON AKSI KONTAK CEPAT -->
+                                        <div class="flex justify-center sm:justify-start gap-3 mt-2.5 no-print">
+                                            <a id="cvBtnWa" href="#" target="_blank" class="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow text-xs hover:scale-110 transition" title="Hubungi via WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                                            <a id="cvBtnFb" href="#" target="_blank" class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center shadow text-xs hover:scale-110 transition" title="Buka Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                                            <a id="cvBtnIg" href="#" target="_blank" class="w-7 h-7 rounded-full bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 text-white flex items-center justify-center shadow text-xs hover:scale-110 transition" title="Buka Instagram"><i class="fa-brands fa-instagram"></i></a>
+                                            <a id="cvBtnTt" href="#" target="_blank" class="w-7 h-7 rounded-full bg-black text-white flex items-center justify-center shadow text-xs hover:scale-110 transition" title="Buka TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                                            <a id="cvBtnEmail" href="#" class="w-7 h-7 rounded-full bg-slate-600 text-white flex items-center justify-center shadow text-xs hover:scale-110 transition" title="Kirim Email"><i class="fa-solid fa-envelope"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CV BADY DATA -->
+                                <div class="space-y-4 text-xs sm:text-sm text-slate-800">
+                                    <!-- Blok Hubungan Kontak -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                        <div><span class="text-slate-500 block text-[11px] font-bold uppercase">No. WhatsApp</span> <span id="cvDataWa" class="font-semibold">-</span></div>
+                                        <div><span class="text-slate-500 block text-[11px] font-bold uppercase">Email Resmi</span> <span id="cvDataEmail" class="font-semibold">-</span></div>
+                                    </div>
+
+                                    <!-- Blok Jalur Pendidikan/Pekerjaan Khusus -->
+                                    <div id="cvBlokDetail" class="p-4 rounded-xl border">
+                                        <!-- Konten diisi dinamis oleh JS -->
+                                    </div>
+
+                                    <!-- Blok Saran Masukan -->
+                                    <div class="space-y-1">
+                                        <span class="text-slate-500 block text-[11px] font-bold uppercase tracking-wider"><i class="fa-solid fa-comment-dots"></i> Saran & Rekomendasi Terhadap Sekolah</span>
+                                        <blockquote id="cvDataSaran" class="p-3 bg-amber-50 rounded-xl border-l-4 border-amber-500 text-slate-700 italic leading-relaxed text-justify">
+                                            -
+                                        </blockquote>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Footer Cetak Internal Dokumen -->
+                            <div class="border-t pt-2 mt-6 flex justify-between items-center text-[10px] text-slate-400">
+                                <span>Rekap Dokumen SIALUM - SDN 17 Dauh Puri</span>
+                                <span class="italic font-semibold">Sistem Dikembangkan Oleh: 3D Creative</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER HAK CIPTA (3D Creative Selalu Ditampilkan Elegan) -->
+    <footer class="bg-slate-800 text-slate-400 text-center py-4 text-xs border-t border-slate-700 no-print">
+        <div class="max-w-6xl mx-auto px-4 space-y-1">
+            <p class="font-semibold text-slate-300">&copy; 2026 SD Negeri 17 Dauh Puri Kota Denpasar - Bali.</p>
+            <p class="text-slate-500 tracking-wide">SIALUM (Sistem Informasi & Penelusuran Alumni) • All Rights Reserved.</p>
+            <p class="text-[11px] text-blue-400 font-bold mt-1 tracking-wider uppercase">Powered & Developed by <span class="text-white bg-blue-600 px-1.5 py-0.5 rounded shadow-sm"><i class="fa-solid fa-cubes mr-0.5"></i> 3D Creative</span></p>
+        </div>
+    </footer>
+
+    <!-- LOGIKA JAVASCRIPT UTAMA (Aplikasi Inti & Kompresor Foto) -->
+    <script>
+        // ==================== CONFIGURASI SYSTEM ====================
+        // SILAKAN MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI BAWAH INI
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzc8BXp8-tJXaWkTCirgcy59jgwKvmCLR0Gb56sV6IhNZduiSowYbZrwk0NzznoSOwF/exec';
+
+        let globalAlumniData = []; // Menyimpan memori data dari Google Sheets secara lokal
+
+        // Pemuatan Otomatis Opsi Tahun Lulus SD Dinamis (1990 s.d Tahun Berjalan)
+        const tahunSelect = document.getElementById('tahunLulus');
+        const filterTahunSelect = document.getElementById('filterTahun');
+        const tahunSekarang = new Date().getFullYear();
+        for (let i = tahunSekarang; i >= 1990; i--) {
+            let opt1 = document.createElement('option'); opt1.value = i; opt1.innerHTML = i;
+            let opt2 = document.createElement('option'); opt2.value = i; opt2.innerHTML = i;
+            tahunSelect.appendChild(opt1);
+            filterTahunSelect.appendChild(opt2);
+        }
+
+        // Tampilan Jalur Kondisional di Form Input
+        const statusSelect = document.getElementById('statusSekarang');
+        statusSelect.addEventListener('change', function() {
+            document.getElementById('jalurSMP').classList.add('hidden-section');
+            document.getElementById('jalurSMA').classList.add('hidden-section');
+            document.getElementById('jalurMapan').classList.add('hidden-section');
+            
+            toggleRequiredFields(this.value, false);
+
+            if (this.value === 'SMP') {
+                document.getElementById('jalurSMP').classList.remove('hidden-section');
+                toggleRequiredFields('SMP', true);
+            } else if (this.value === 'SMA') {
+                document.getElementById('jalurSMA').classList.remove('hidden-section');
+                toggleRequiredFields('SMA', true);
+            } else if (this.value === 'Mapan') {
+                document.getElementById('jalurMapan').classList.remove('hidden-section');
+                toggleRequiredFields('Mapan', true);
+            }
+        });
+
+        function toggleRequiredFields(type, status) {
+            if (type === 'SMP') {
+                document.getElementById('smpName').required = status;
+                document.getElementById('smpJalur').required = status;
+            } else if (type === 'SMA') {
+                document.getElementById('smaName').required = status;
+                document.getElementById('smaJurusan').required = status;
+            } else if (type === 'Mapan') {
+                document.getElementById('kerjaInstansi').required = status;
+                document.getElementById('kerjaKeahlian').required = status;
+            }
+        }
+
+        // ==================== NAVIGASI MULTI-HALAMAN VIRTUAL ====================
+        function toggleView(view) {
+            if (view === 'admin') {
+                document.getElementById('formSection').classList.add('hidden-section');
+                document.getElementById('adminSection').classList.remove('hidden-section');
+                document.getElementById('navAdminBtn').classList.add('hidden-section');
+                document.getElementById('navFormBtn').classList.remove('hidden-section');
+            } else {
+                document.getElementById('formSection').classList.remove('hidden-section');
+                document.getElementById('adminSection').classList.add('hidden-section');
+                document.getElementById('navAdminBtn').classList.remove('hidden-section');
+                document.getElementById('navFormBtn').classList.add('hidden-section');
+            }
+        }
+
+        // ==================== PROSES SUBMIT + SMART COMPRESSOR FOTO (ALUMNI) ====================
+        const form = document.getElementById('alumniForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async e => {
+            e.preventDefault();
+            
+            // Konversi Otomatis Username Medsos Menjadi Link Profil Aktif (Validasi Otomatis)
+            fixSocialMediaLinks();
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-1"></i> Sedang mengompres foto & mengunggah data...';
+
+            Swal.fire({
+                title: 'Memproses Data',
+                text: 'Mohon tunggu, Smart Compressor 3D Creative sedang mengamankan data Anda...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            const formData = new FormData(form);
+            const fileInput = document.getElementById('fotoInput');
+            
+            // Logika Smart Compressor Gambar Berbasis HTML5 Canvas
+            if (fileInput.files.length > 0) {
+                try {
+                    const compressedBase64 = await compressImage(fileInput.files[0]);
+                    formData.append('fileData', compressedBase64);
+                    formData.append('fileName', fileInput.files[0].name);
+                } catch (err) {
+                    console.error("Gagal mengompres gambar, menggunakan file asli:", err);
+                }
+            }
+
+            // Ambil data checkbox sinergi khusus alumni mapan
+            let checkboxes = document.querySelectorAll('input[name="sinergi"]:checked');
+            let sinergiValues = Array.from(checkboxes).map(cb => cb.value).join(', ');
+            formData.append('Bentuk Sinergi atau Kontribusi yang Bersedia Dilakukan', sinergiValues);
+
+            fetch(scriptURL, { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(response => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> Kirim Data Registrasi Alumni';
+                Swal.close();
+
+                if (response.result === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Matur Suksma!',
+                        text: 'Data Anda berhasil disimpan ke sistem SIALUM SDN 17 Dauh Puri.',
+                        confirmButtonColor: '#1d4ed8'
+                    });
+                    form.reset();
+                    document.getElementById('jalurSMP').classList.add('hidden-section');
+                    document.getElementById('jalurSMA').classList.add('hidden-section');
+                    document.getElementById('jalurMapan').classList.add('hidden-section');
+                } else {
+                    throw new Error(response.error);
+                }
+            })
+            .catch(error => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> Kirim Data Registrasi Alumni';
+                Swal.close();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Proses Gagal',
+                    text: 'Terjadi gangguan jaringan: ' + error.message,
+                    confirmButtonColor: '#dc2626'
+                });
+            });
+        });
+
+        // Validasi merubah teks username medsos biasa menjadi URL link absolut
+        function fixSocialMediaLinks() {
+            const fb = document.getElementById('fbInput');
+            const ig = document.getElementById('igInput');
+            const tt = document.getElementById('ttInput');
+            if(fb.value && !fb.value.includes('http')) fb.value = 'https://facebook.com/' + fb.value.replace('@', '');
+            if(ig.value && !ig.value.includes('http')) ig.value = 'https://instagram.com/' + ig.value.replace('@', '');
+            if(tt.value && !tt.value.includes('http')) tt.value = 'https://tiktok.com/@' + tt.value.replace('@', '');
+        }
+
+        // Engine Inti Smart Compressor (Kompresi Gambar 90%)
+        function compressImage(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = event => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const max_width = 500; // Pembatasan resolusi maksimal pasfoto
+                        const scaleSize = max_width / img.width;
+                        
+                        if(img.width > max_width) {
+                            canvas.width = max_width;
+                            canvas.height = img.height * scaleSize;
+                        } else {
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                        }
+                        
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        
+                        // Menyetel kualitas kompresi ke 0.7 (70%)
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                        resolve(dataUrl);
+                    };
+                };
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // ==================== ENGINE BACKOFFICE (ADMIN DASHBOARD) ====================
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', e => {
+            e.preventDefault();
+            
+            Swal.fire({
+                title: 'Memverifikasi Akses',
+                text: 'Mencocokkan akun dengan basis data AdminConfig...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            const user = document.getElementById('adminUser').value;
+            const pass = document.getElementById('adminPass').value;
+
+            fetch(`${scriptURL}?action=login&username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}`, { method: 'POST' })
+            .then(res => res.json())
+            .then(response => {
+                Swal.close();
+                if (response.result === 'success') {
+                    Swal.fire({ icon: 'success', title: 'Login Berhasil', text: 'Selamat datang kembali di Dashboard SIALUM.', timer: 1500, showConfirmButton: false });
+                    document.getElementById('loginArea').classList.add('hidden-section');
+                    document.getElementById('dashboardArea').classList.remove('hidden-section');
+                    loadMasterAlumniData(); // Ambil data secara global
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Akses Ditolak', text: 'Kombinasi Username dan Password Anda salah!' });
+                }
+            })
+            .catch(err => {
+                Swal.close();
+                Swal.fire({ icon: 'error', title: 'Error Server', text: 'Gagal menghubungi gerbang API Google Script.' });
+            });
+        });
+
+        // Sinkronisasi Mengunduh Data Cloud ke Memori Lokal Aplikasi
+        function loadMasterAlumniData() {
+            fetch(`${scriptURL}?action=fetchData`, { method: 'POST' })
+            .then(res => res.json())
+            .then(response => {
+                if(response.result === 'success') {
+                    globalAlumniData = response.data;
+                    renderAlumniList(globalAlumniData);
+                }
+            });
+        }
+
+        function renderAlumniList(data) {
+            const container = document.getElementById('alumniListContainer');
+            document.getElementById('countAlumni').innerHTML = data.length;
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-center text-slate-400 py-6">Tidak ada data alumni yang cocok.</p>';
+                return;
+            }
+
+            data.forEach((alumni, index) => {
+                let div = document.createElement('div');
+                div.className = "p-3 hover:bg-blue-50 cursor-pointer transition flex justify-between items-center font-medium text-slate-700";
+                div.onclick = () => showCvProfile(alumni);
+                div.innerHTML = `
+                    <div>
+                        <span class="block font-bold text-slate-900">${alumni['Nama Lengkap']}</span>
+                        <span class="text-xs text-slate-400">Angkatan Lulus: ${alumni['Tahun Lulus SD']}</span>
+                    </div>
+                    <span class="text-xs bg-slate-100 px-2.5 py-1 rounded-full font-bold text-slate-600 uppercase border">${alumni['Status Sekarang']}</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // FILTER EVENT REAL-TIME (KETIK 3 HURUF ATAU KLIK TAHUN)
+        const searchInput = document.getElementById('searchName');
+        const filterTahun = document.getElementById('filterTahun');
+
+        function triggerFilter() {
+            const keyword = searchInput.value.toLowerCase();
+            const year = filterTahun.value;
+
+            let filtered = globalAlumniData;
+
+            if (keyword.length >= 3) {
+                filtered = filtered.filter(item => item['Nama Lengkap'].toLowerCase().includes(keyword));
+            }
+            if (year !== "") {
+                filtered = filtered.filter(item => item['Tahun Lulus SD'].toString() === year.toString());
+            }
+
+            renderAlumniList(filtered);
+        }
+
+        searchInput.addEventListener('input', triggerFilter);
+        filterTahun.addEventListener('change', triggerFilter);
+
+        // FORMATTER VIEW REKAP CV DENGAN ANIMASI SKELETON
+        function showCvProfile(alumni) {
+            document.getElementById('emptyCvView').classList.add('hidden-section');
+            document.getElementById('printArea').classList.add('hidden-section');
+            document.getElementById('skeletonView').classList.remove('hidden-section');
+
+            // Simulasi Skeleton Efek Biar Mewah & Profesional
+            setTimeout(() => {
+                document.getElementById('skeletonView').classList.add('hidden-section');
+                document.getElementById('printArea').classList.remove('hidden-section');
+
+                // Mapping Teks Umum
+                document.getElementById('cvNama').innerHTML = alumni['Nama Lengkap'].toUpperCase();
+                document.getElementById('cvAngkatan').innerHTML = "Alumni Lulusan Tahun " + alumni['Tahun Lulus SD'];
+                document.getElementById('cvDataWa').innerHTML = alumni['No WhatsApp'];
+                document.getElementById('cvDataEmail').innerHTML = alumni['Email'];
+                document.getElementById('cvDataSaran').innerHTML = `"${alumni['Saran dan Masukan untuk Kemajuan Sekolah']}"`;
+
+                // Handle Swafoto Link
+                const fotoImg = document.getElementById('cvFoto');
+                if(alumni['Link Swafoto Terkompresi'] !== "") {
+                    fotoImg.src = alumni['Link Swafoto Terkompresi'];
+                } else {
+                    fotoImg.src = "https://via.placeholder.com/150?text=No+Photo";
+                }
+
+                // Handle Tautan Quick Action Media Sosial
+                setupActionLink('cvBtnWa', alumni['No WhatsApp'] ? 'https://wa.me/' + alumni['No WhatsApp'].replace(/[^0-9]/g, '') : null);
+                setupActionLink('cvBtnFb', alumni['Link Facebook']);
+                setupActionLink('cvBtnIg', alumni['Link Instagram']);
+                setupActionLink('cvBtnTt', alumni['Link TikTok']);
+                setupActionLink('cvBtnEmail', alumni['Email'] ? 'mailto:' + alumni['Email'] : null);
+
+                // Handle Blok Info Jalur Spesifik (SMP / SMA / MAPAN)
+                const blokDetail = document.getElementById('cvBlokDetail');
+                blokDetail.className = "p-4 rounded-xl border ";
+                
+                if (alumni['Status Sekarang'] === 'SMP') {
+                    blokDetail.classList.add('bg-emerald-50', 'border-emerald-200');
+                    blokDetail.innerHTML = `
+                        <h4 class="font-bold text-emerald-900 mb-2 uppercase text-xs tracking-wider"><i class="fa-solid fa-school"></i> Status: Pelajar SMP</h4>
+                        <p class="mb-1"><strong>Nama Sekolah SMP:</strong> ${alumni['Nama SMP Sekarang']}</p>
+                        <p><strong>Jalur Pendaftaran:</strong> ${alumni['Jalur Masuk SMP']}</p>
+                    `;
+                } else if (alumni['Status Sekarang'] === 'SMA') {
+                    blokDetail.classList.add('bg-amber-50', 'border-amber-200');
+                    blokDetail.innerHTML = `
+                        <h4 class="font-bold text-amber-900 mb-2 uppercase text-xs tracking-wider"><i class="fa-solid fa-school-flag"></i> Status: Pelajar SMA / SMK</h4>
+                        <p class="mb-1"><strong>Nama Sekolah SMA/SMK:</strong> ${alumni['Nama SMA atau SMK Sekarang']}</p>
+                        <p><strong>Jurusan / Peminatan:</strong> ${alumni['Jurusan atau Peminatan SMA']}</p>
+                    `;
+                } else {
+                    blokDetail.classList.add('bg-purple-50', 'border-purple-200');
+                    blokDetail.innerHTML = `
+                        <h4 class="font-bold text-purple-900 mb-2 uppercase text-xs tracking-wider"><i class="fa-solid fa-briefcase"></i> Status: Lulusan Mapan (Kuliah/Kerja)</h4>
+                        <p class="mb-1"><strong>Tempat Bekerja / Kampus:</strong> ${alumni['Nama Kampus atau Instansi Tempat Bekerja']}</p>
+                        <p class="mb-1"><strong>Keahlian / Profesi Spesifik:</strong> ${alumni['Keahlian Spesifik atau Bidang Profesi']}</p>
+                        <p class="mt-2 text-xs bg-white p-2 rounded border border-purple-200 text-purple-950"><strong>Potensi Sinergi:</strong> ${alumni['Bentuk Sinergi atau Kontribusi yang Bersedia Dilakukan'] || 'Tidak Ada'}</p>
+                    `;
+                }
+
+            }, 600); // Kecepatan delay loading skeleton
+        }
+
+        function setupActionLink(id, url) {
+            const btn = document.getElementById(id);
+            if(url && url !== "" && url !== "https://facebook.com/" && url !== "https://instagram.com/" && url !== "https://tiktok.com/@") {
+                btn.href = url;
+                btn.classList.remove('opacity-25', 'pointer-events-none');
+            } else {
+                btn.href = "#";
+                btn.classList.add('opacity-25', 'pointer-events-none');
+            }
+        }
+    </script>
+</body>
+</html>
