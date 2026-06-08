@@ -686,43 +686,42 @@
         document.getElementById('cvDataEmail').innerHTML = alumni['Email'];
         document.getElementById('cvDataSaran').innerHTML = `"${alumni['Saran dan Masukan untuk Kemajuan Sekolah']}"`;
 
-// Handle Swafoto Link (Menggunakan Google Drive Thumbnail API + Link Klik Perbesar)
+// Handle Swafoto Link (Solusi Anti-Blokir Instansi Sekolah + Klik Perbesar)
 const fotoImg = document.getElementById('cvFoto');
 const fotoLink = document.getElementById('cvFotoLink');
 const rawUrl = alumni['Link Swafoto Terkompresi'] ? alumni['Link Swafoto Terkompresi'].toString().trim() : '';
 
 if (rawUrl !== "") {
-    // Ekstrak ID unik file dari link Google Drive menggunakan regex
+    // Ekstrak ID unik file dari link Google Drive
     const driveIdMatch = rawUrl.match(/(?:id=|\/file\/d\/)([a-zA-Z0-9-_]+)/);
     
     if (driveIdMatch && driveIdMatch[1]) {
         const driveId = driveIdMatch[1];
-        // 1. Tampilkan gambar pratinjau lewat Thumbnail API (resolusi optimal 300px agar cepat)
-        fotoImg.src = "https://docs.google.com/uc?export=view&id=" + driveId + "&sz=s300";
-        // 2. Set tujuan klik ke link asli Google Drive agar admin bisa melihat resolusi penuh
+        
+        // JALUR UTAMA: bypass pembatasan sekolah menggunakan perantara Google Apps Script Anda sendiri
+        fotoImg.src = scriptURL + "?action=getThumbnail&id=" + driveId;
+        
+        // Tautan klik tetap mengarah ke file asli di tab baru
         fotoLink.href = rawUrl;
         fotoLink.style.pointerEvents = "auto";
     } else if (rawUrl.startsWith('http')) {
-        // Jika isi data di sheet sudah berupa link mentah atau url lain
         fotoImg.src = rawUrl;
         fotoLink.href = rawUrl;
         fotoLink.style.pointerEvents = "auto";
     } else {
-        // Fallback jika format teks tidak dikenal
         fotoImg.src = "https://via.placeholder.com/150?text=No+Photo";
         fotoLink.href = "javascript:void(0)";
         fotoLink.style.pointerEvents = "none";
     }
 } else {
-    // Jika alumni tidak mengunggah swafoto
     fotoImg.src = "https://via.placeholder.com/150?text=No+Photo";
     fotoLink.href = "javascript:void(0)";
     fotoLink.style.pointerEvents = "none";
 }
 
-// Pencegahan jika link thumbnail bermasalah (misal file dihapus atau pembatasan ketat domain)
+// Jika jalur utama gagal (misal file terhapus total), berikan fallback placeholder
 fotoImg.onerror = function() {
-    this.src = "https://via.placeholder.com/150?text=Akses+Terbatas";
+    this.src = "https://via.placeholder.com/150?text=Format+Error";
 };
 
         // Handle Tautan Quick Action Media Sosial
