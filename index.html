@@ -686,7 +686,7 @@
         document.getElementById('cvDataEmail').innerHTML = alumni['Email'];
         document.getElementById('cvDataSaran').innerHTML = `"${alumni['Saran dan Masukan untuk Kemajuan Sekolah']}"`;
 
-// Handle Swafoto Link (Solusi Anti-Blokir Instansi Sekolah + Klik Perbesar)
+// Handle Swafoto Link (Solusi Tembus Firewall Belajar.id via Export API)
 const fotoImg = document.getElementById('cvFoto');
 const fotoLink = document.getElementById('cvFotoLink');
 const rawUrl = alumni['Link Swafoto Terkompresi'] ? alumni['Link Swafoto Terkompresi'].toString().trim() : '';
@@ -698,8 +698,9 @@ if (rawUrl !== "") {
     if (driveIdMatch && driveIdMatch[1]) {
         const driveId = driveIdMatch[1];
         
-        // JALUR UTAMA: bypass pembatasan sekolah menggunakan perantara Google Apps Script Anda sendiri
-        fotoImg.src = scriptURL + "?action=getThumbnail&id=" + driveId;
+        // MENGGUNAKAN LINK EXPORT THUMBNAIL RESMI GOOGLE WORKSPACE
+        // Format ini paling disukai oleh browser dan lolos dari sistem keamanan akun belajar.id
+        fotoImg.src = "https://lh3.googleusercontent.com/d/" + driveId;
         
         // Tautan klik tetap mengarah ke file asli di tab baru
         fotoLink.href = rawUrl;
@@ -719,11 +720,16 @@ if (rawUrl !== "") {
     fotoLink.style.pointerEvents = "none";
 }
 
-// Jika jalur utama gagal (misal file terhapus total), berikan fallback placeholder
+// Jika gambar tidak termuat karena cookies browser memblokir pihak ketiga, gunakan alternatif cadangan resmi ini
 fotoImg.onerror = function() {
-    this.src = "https://via.placeholder.com/150?text=Format+Error";
+    // Jika link lh3 gagal, otomatis beralih ke endpoint thumbnail alternatif
+    const driveIdMatch = rawUrl.match(/(?:id=|\/file\/d\/)([a-zA-Z0-9-_]+)/);
+    if (driveIdMatch && driveIdMatch[1] && this.src !== "https://drive.google.com/thumbnail?id=" + driveIdMatch[1]) {
+        this.src = "https://drive.google.com/thumbnail?id=" + driveIdMatch[1];
+    } else {
+        this.src = "https://via.placeholder.com/150?text=Gunakan+Chrome";
+    }
 };
-
         // Handle Tautan Quick Action Media Sosial
         let nomorWa = alumni['No WhatsApp'] ? alumni['No WhatsApp'].toString().replace(/[^0-9]/g, '') : '';
 if (nomorWa.startsWith('8')) {
