@@ -395,11 +395,11 @@
 
         let globalAlumniData = []; // Menyimpan memori data dari Google Sheets secara lokal
 
-        // Pemuatan Otomatis Opsi Tahun Lulus SD Dinamis (1990 s.d Tahun Berjalan)
+        // Pemuatan Otomatis Opsi Tahun Lulus SD Dinamis (1970 s.d Tahun Berjalan)
         const tahunSelect = document.getElementById('tahunLulus');
         const filterTahunSelect = document.getElementById('filterTahun');
         const tahunSekarang = new Date().getFullYear();
-        for (let i = tahunSekarang; i >= 1990; i--) {
+        for (let i = tahunSekarang; i >= 1970; i--) {
             let opt1 = document.createElement('option'); opt1.value = i; opt1.innerHTML = i;
             let opt2 = document.createElement('option'); opt2.value = i; opt2.innerHTML = i;
             tahunSelect.appendChild(opt1);
