@@ -699,7 +699,13 @@
         }
 
         // Handle Tautan Quick Action Media Sosial
-        setupActionLink('cvBtnWa', alumni['No WhatsApp'] ? 'https://wa.me/' + alumni['No WhatsApp'].toString().replace(/[^0-9]/g, '') : null);
+        let nomorWa = alumni['No WhatsApp'] ? alumni['No WhatsApp'].toString().replace(/[^0-9]/g, '') : '';
+if (nomorWa.startsWith('8')) {
+    nomorWa = '62' + nomorWa; // Jika angka 0 di depan hilang (misal 8123...), ubah jadi 628123...
+} else if (nomorWa.startsWith('0')) {
+    nomorWa = '62' + nomorWa.slice(1); // Jika diawali 08123..., ubah jadi 628123...
+}
+setupActionLink('cvBtnWa', nomorWa !== '' ? 'https://wa.me/' + nomorWa : null);
         setupActionLink('cvBtnFb', alumni['Link Facebook']);
         setupActionLink('cvBtnIg', alumni['Link Instagram']);
         setupActionLink('cvBtnTt', alumni['Link TikTok']);
