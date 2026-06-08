@@ -671,79 +671,87 @@
         filterTahun.addEventListener('change', triggerFilter);
 
         // FORMATTER VIEW REKAP CV DENGAN ANIMASI SKELETON
-        function showCvProfile(alumni) {
-            document.getElementById('emptyCvView').classList.add('hidden-section');
-            document.getElementById('printArea').classList.add('hidden-section');
-            document.getElementById('skeletonView').classList.remove('hidden-section');
+       function showCvProfile(alumni) {
+    // Sembunyikan panduan kosong dan tampilkan skeleton loading
+    document.getElementById('emptyCvView').classList.add('hidden-section');
+    document.getElementById('printArea').classList.add('hidden-section');
+    document.getElementById('skeletonView').classList.remove('hidden-section');
 
-            // Simulasi Skeleton Efek Biar Mewah & Profesional
-            setTimeout(() => {
-                document.getElementById('skeletonView').classList.add('hidden-section');
-                document.getElementById('printArea').classList.remove('hidden-section');
+    // Simulasi Skeleton Efek Biar Mewah & Profesional
+    setTimeout(() => {
+        // Sembunyikan skeleton, tampilkan area cetak CV yang asli
+        document.getElementById('skeletonView').classList.add('hidden-section');
+        document.getElementById('printArea').classList.remove('hidden-section');
 
-                // Mapping Teks Umum
-                document.getElementById('cvNama').innerHTML = alumni['Nama Lengkap'].toUpperCase();
-                document.getElementById('cvAngkatan').innerHTML = "Alumni Lulusan Tahun " + alumni['Tahun Lulus SD'];
-                document.getElementById('cvDataWa').innerHTML = alumni['No WhatsApp'];
-                document.getElementById('cvDataEmail').innerHTML = alumni['Email'];
-                document.getElementById('cvDataSaran').innerHTML = `"${alumni['Saran dan Masukan untuk Kemajuan Sekolah']}"`;
+        // Mapping Teks Umum
+        document.getElementById('cvNama').innerHTML = alumni['Nama Lengkap'].toUpperCase();
+        document.getElementById('cvAngkatan').innerHTML = "Alumni Lulusan Tahun " + alumni['Tahun Lulus SD'];
+        document.getElementById('cvDataWa').innerHTML = alumni['No WhatsApp'];
+        document.getElementById('cvDataEmail').innerHTML = alumni['Email'];
+        document.getElementById('cvDataSaran').innerHTML = `"${alumni['Saran dan Masukan untuk Kemajuan Sekolah']}"`;
 
-                // Handle Swafoto Link
-                const fotoImg = document.getElementById('cvFoto');
-                if(alumni['Link Swafoto Terkompresi'] !== "") {
-                    fotoImg.src = alumni['Link Swafoto Terkompresi'];
-                } else {
-                    fotoImg.src = "https://via.placeholder.com/150?text=No+Photo";
-                }
-
-                // Handle Tautan Quick Action Media Sosial
-                setupActionLink('cvBtnWa', alumni['No WhatsApp'] ? 'https://wa.me/' + alumni['No WhatsApp'].replace(/[^0-9]/g, '') : null);
-                setupActionLink('cvBtnFb', alumni['Link Facebook']);
-                setupActionLink('cvBtnIg', alumni['Link Instagram']);
-                setupActionLink('cvBtnTt', alumni['Link TikTok']);
-                setupActionLink('cvBtnEmail', alumni['Email'] ? 'mailto:' + alumni['Email'] : null);
-
-                // Handle Blok Info Jalur Spesifik (SMP / SMA / MAPAN)
-                const blokDetail = document.getElementById('cvBlokDetail');
-                blokDetail.className = "p-4 rounded-xl border ";
-                
-                if (alumni['Status Sekarang'] === 'SMP') {
-                    blokDetail.classList.add('bg-emerald-50', 'border-emerald-200');
-                    blokDetail.innerHTML = `
-                        <h4 class="font-bold text-emerald-900 mb-2 uppercase text-xs tracking-wider"><i class="fa-solid fa-school"></i> Status: Pelajar SMP</h4>
-                        <p class="mb-1"><strong>Nama Sekolah SMP:</strong> ${alumni['Nama SMP Sekarang']}</p>
-                        <p><strong>Jalur Pendaftaran:</strong> ${alumni['Jalur Masuk SMP']}</p>
-                    `;
-                } else if (alumni['Status Sekarang'] === 'SMA') {
-                    blokDetail.classList.add('bg-amber-50', 'border-amber-200');
-                    blokDetail.innerHTML = `
-                        <h4 class="font-bold text-amber-900 mb-2 uppercase text-xs tracking-wider"><i class="fa-solid fa-school-flag"></i> Status: Pelajar SMA / SMK</h4>
-                        <p class="mb-1"><strong>Nama Sekolah SMA/SMK:</strong> ${alumni['Nama SMA atau SMK Sekarang']}</p>
-                        <p><strong>Jurusan / Peminatan:</strong> ${alumni['Jurusan atau Peminatan SMA']}</p>
-                    `;
-                } else {
-                    blokDetail.classList.add('bg-purple-50', 'border-purple-200');
-                    blokDetail.innerHTML = `
-                        <h4 class="font-bold text-purple-900 mb-2 uppercase text-xs tracking-wider"><i class="fa-solid fa-briefcase"></i> Status: Lulusan Mapan (Kuliah/Kerja)</h4>
-                        <p class="mb-1"><strong>Tempat Bekerja / Kampus:</strong> ${alumni['Nama Kampus atau Instansi Tempat Bekerja']}</p>
-                        <p class="mb-1"><strong>Keahlian / Profesi Spesifik:</strong> ${alumni['Keahlian Spesifik atau Bidang Profesi']}</p>
-                        <p class="mt-2 text-xs bg-white p-2 rounded border border-purple-200 text-purple-950"><strong>Potensi Sinergi:</strong> ${alumni['Bentuk Sinergi atau Kontribusi yang Bersedia Dilakukan'] || 'Tidak Ada'}</p>
-                    `;
-                }
-
-            }, 600); // Kecepatan delay loading skeleton
+        // Handle Swafoto Link
+        const fotoImg = document.getElementById('cvFoto');
+        if(alumni['Link Swafoto Terkompresi'] && alumni['Link Swafoto Terkompresi'] !== "") {
+            fotoImg.src = alumni['Link Swafoto Terkompresi'];
+        } else {
+            fotoImg.src = "https://via.placeholder.com/150?text=No+Photo";
         }
+
+        // Handle Tautan Quick Action Media Sosial
+        setupActionLink('cvBtnWa', alumni['No WhatsApp'] ? 'https://wa.me/' + alumni['No WhatsApp'].toString().replace(/[^0-9]/g, '') : null);
+        setupActionLink('cvBtnFb', alumni['Link Facebook']);
+        setupActionLink('cvBtnIg', alumni['Link Instagram']);
+        setupActionLink('cvBtnTt', alumni['Link TikTok']);
+        setupActionLink('cvBtnEmail', alumni['Email'] ? 'mailto:' + alumni['Email'] : null);
+
+        // Handle Blok Info Jalur Spesifik (SMP / SMA / MAPAN)
+        const blokDetail = document.getElementById('cvBlokDetail');
+        blokDetail.className = "p-4 rounded-xl border ";
+        
+        if (alumni['Status Sekarang'] === 'SMP') {
+            blokDetail.classList.add('bg-emerald-50', 'border-emerald-200');
+            blokDetail.innerHTML = `
+                <h4 class="font-bold text-emerald-900 mb-2 uppercase text-xs tracking-wider"><i class="fa-solid fa-school"></i> Status: Pelajar SMP</h4>
+                <p class="mb-1"><strong>Nama Sekolah SMP:</strong> ${alumni['Nama SMP Sekarang']}</p>
+                <p><strong>Jalur Pendaftaran:</strong> ${alumni['Jalur Masuk SMP']}</p>
+            `;
+        } else if (alumni['Status Sekarang'] === 'SMA') {
+            blokDetail.classList.add('bg-amber-50', 'border-amber-200');
+            blokDetail.innerHTML = `
+                <h4 class="font-bold text-amber-900 mb-2 uppercase text-xs tracking-wider"><i class="fa-solid fa-school-flag"></i> Status: Pelajar SMA / SMK</h4>
+                <p class="mb-1"><strong>Nama Sekolah SMA/SMK:</strong> ${alumni['Nama SMA atau SMK Sekarang']}</p>
+                <p><strong>Jurusan / Peminatan:</strong> ${alumni['Jurusan atau Peminatan SMA']}</p>
+            `;
+        } else {
+            blokDetail.classList.add('bg-purple-50', 'border-purple-200');
+            blokDetail.innerHTML = `
+                <h4 class="font-bold text-purple-900 mb-2 uppercase text-xs tracking-wider"><i class="fa-solid fa-briefcase"></i> Status: Lulusan Mapan (Kuliah/Kerja)</h4>
+                <p class="mb-1"><strong>Tempat Bekerja / Kampus:</strong> ${alumni['Nama Kampus atau Instansi Tempat Bekerja']}</p>
+                <p class="mb-1"><strong>Keahlian / Profesi Spesifik:</strong> ${alumni['Keahlian Spesifik atau Bidang Profesi']}</p>
+                <p class="mt-2 text-xs bg-white p-2 rounded border border-purple-200 text-purple-950"><strong>Potensi Sinergi:</strong> ${alumni['Bentuk Sinergi atau Kontribusi yang Bersedia Dilakukan'] || 'Tidak Ada'}</p>
+            `;
+        }
+
+    }, 600);
+}
 
         function setupActionLink(id, url) {
-            const btn = document.getElementById(id);
-            if(url && url !== "" && url !== "https://facebook.com/" && url !== "https://instagram.com/" && url !== "https://tiktok.com/@") {
-                btn.href = url;
-                btn.classList.remove('opacity-25', 'pointer-events-none');
-            } else {
-                btn.href = "#";
-                btn.classList.add('opacity-25', 'pointer-events-none');
-            }
-        }
+    const element = document.getElementById(id);
+    if (!element) return;
+
+    if (url && url.trim() !== "" && url !== "https://wa.me/" && url !== "mailto:") {
+        element.href = url;
+        element.target = "_blank"; // Membuka WhatsApp / Medsos di tab baru agar tidak menutup web admin
+        element.style.opacity = "1";
+        element.style.pointerEvents = "auto";
+    } else {
+        element.href = "javascript:void(0)"; // Mencegah melompat ke formulir jika data kosong
+        element.removeAttribute('target');
+        element.style.opacity = "0.3"; // Membuat ikon meredup jika alumni tidak mengisi medsos tersebut
+        element.style.pointerEvents = "none";
+    }
+}
     </script>
 </body>
 </html>
