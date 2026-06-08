@@ -475,16 +475,17 @@
                 didOpen: () => { Swal.showLoading(); }
             });
 
-const formData = new FormData(form);
+            const formData = new FormData(form);
 
-// KODE BARU: Menggabungkan semua checkbox sinergi yang dicentang menjadi satu teks panjang dipisahkan koma
-const checkboxes = document.querySelectorAll('input[name="sinergi"]:checked');
-const sinergiValues = Array.from(checkboxes).map(cb => cb.value).join(', ');
-formData.set('sinergi', sinergiValues); // Memaksa mengisi kolom 'sinergi' dengan semua pilihan alumni
+            // KODE SINKRON: Menggabungkan semua checkbox sinergi menjadi satu baris teks untuk Google Sheets
+            const cbSinergi = document.querySelectorAll('input[name="sinergi"]:checked');
+            const teksSinergi = Array.from(cbSinergi).map(cb => cb.value).join(', ');
+            formData.set('sinergi', teksSinergi); 
+            formData.append('Bentuk Sinergi atau Kontribusi yang Bersedia Dilakukan', teksSinergi);
 
-const fileInput = document.getElementById('fotoInput');
+            const fileInput = document.getElementById('fotoInput');
 
-if (fileInput.files.length > 0) {
+            if (fileInput.files.length > 0) {
                 try {
                     const compressedBase64 = await compressImage(fileInput.files[0]);
                     formData.append('fileData', compressedBase64);
@@ -493,11 +494,6 @@ if (fileInput.files.length > 0) {
                     console.error("Gagal mengompres gambar, menggunakan file asli:", err);
                 }
             }
-
-            // Ambil data checkbox sinergi khusus alumni mapan
-            let checkboxes = document.querySelectorAll('input[name="sinergi"]:checked');
-            let sinergiValues = Array.from(checkboxes).map(cb => cb.value).join(', ');
-            formData.append('Bentuk Sinergi atau Kontribusi yang Bersedia Dilakukan', sinergiValues);
 
             fetch(scriptURL, { method: 'POST', body: formData })
             .then(res => res.json())
