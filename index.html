@@ -475,11 +475,16 @@
                 didOpen: () => { Swal.showLoading(); }
             });
 
-            const formData = new FormData(form);
-            const fileInput = document.getElementById('fotoInput');
-            
-            // Logika Smart Compressor Gambar Berbasis HTML5 Canvas
-            if (fileInput.files.length > 0) {
+const formData = new FormData(form);
+
+// KODE BARU: Menggabungkan semua checkbox sinergi yang dicentang menjadi satu teks panjang dipisahkan koma
+const checkboxes = document.querySelectorAll('input[name="sinergi"]:checked');
+const sinergiValues = Array.from(checkboxes).map(cb => cb.value).join(', ');
+formData.set('sinergi', sinergiValues); // Memaksa mengisi kolom 'sinergi' dengan semua pilihan alumni
+
+const fileInput = document.getElementById('fotoInput');
+
+if (fileInput.files.length > 0) {
                 try {
                     const compressedBase64 = await compressImage(fileInput.files[0]);
                     formData.append('fileData', compressedBase64);
